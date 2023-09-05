@@ -1,6 +1,8 @@
 import discord
 from discord.ui import ChannelSelect
 from data import responses
+import discord.ui as ui
+from functions import Functions
 
 
 class Dropdown(discord.ui.Select):
@@ -38,23 +40,31 @@ class Dropdown(discord.ui.Select):
 
         super().__init__(placeholder='Choose your class...', min_values=1, max_values=1, options=options)
 
-    async def callback(self, interaction: discord.Interaction):
-        # Use the interaction object to send a response message containing
-        # the user's favourite colour or choice. The self object refers to the
-        # Select object, and the values attribute gets a list of the user's
-        # selected options. We only want the first one.
-        await interaction.response.send_message(f'Your chosen class is: {self.values[0]}')
-        return self.values[0]
+
+# class DropdownView(discord.ui.View):
+# def __init__(self):
+# super().__init__()
+
+# self.add_item(Dropdown())
+# class CharName(discord.ui.TextInput):
 
 
-class DropdownView(discord.ui.View):
+class BuildModal(discord.ui.Modal, title='Character Builder'):
+
     def __init__(self):
-        super().__init__()
+        super().__init__(title="Character Builder")
+        self.select = Dropdown()
 
-        self.add_item(Dropdown())
+        self.c_name = ui.TextInput(label="Character Name:", placeholder="Name your character...", required=True)
+        self.sp_move = ui.TextInput(label="Special Move:", placeholder="Want to add a special move?",required=False)
+        self.add_item(item=self.select)
+        self.add_item(item=self.c_name)
+        self.add_item(item=self.sp_move)
 
+    async def on_submit(self, interaction: discord.Interaction):
+        # await interaction.response.reply(f'Welcome your challenger, {self.c_name} has joined the Tournament!')
+        t_class = Dropdown.values
+        user = discord.Interaction.user
 
-
-# https://github.com/Rapptz/discord.py/blob/94655cd804d01bef8f514412d20909cedb1371da/examples/views/dropdown.py
-
-# https://github.com/Rapptz/discord.py/blob/94655cd804d01bef8f514412d20909cedb1371da/examples/modals/basic.py
+        f = Functions(self.c_name, self.sp_move, t_class)
+        f.toon_upload(user)
