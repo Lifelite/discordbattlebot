@@ -1,36 +1,41 @@
 import os
 
 import discord
-
+from discord import ui
 from discord.ext import commands
+from datetime import datetime
 
 from dotenv import load_dotenv, find_dotenv
 
-from data import responses
-from ui import BuildModal
+from subroutines.ui import BuildModal, Dropdown, assignType
+
+MY_GUILD = discord.Object(id=360611536672129025)
 
 
-# intents = discord.Intents.default()
-# intents.message_content = True
-# client = discord.Client(intents=intents)
-# bot = commands.Bot(command_prefix='/', intents=intents)
+class MyClient(discord.Client):
+    def __init__(self, *, intents: discord.Intents):
+        super().__init__(intents=intents)
+        # self.tree = app_commands.CommandTree(self)
+
+    # async def setup_hook(self):
+    #     self.tree.copy_global_to(guild=MY_GUILD)
+    #     await self.tree.sync(guild=MY_GUILD)
+
+
+intents = discord.Intents.default()
+client = MyClient(intents=intents)
 
 
 class Bot(commands.Bot):
     def __init__(self):
         intents = discord.Intents.default()
         intents.message_content = True
-
         super().__init__(command_prefix='$', intents=intents)
 
     async def on_ready(self):
         print(f'Logged in as {self.user} (ID: {self.user.id})')
         print('------')
 
-
-# @bot.command(name='help')
-# async def _help(ctx):
-#     await ctx.send(responses.response_dict["help"])
 
 bot = Bot()
 
@@ -39,8 +44,8 @@ bot = Bot()
 async def build(ctx):
     # await ctx.send(responses.response_dict["class_build"])
     view = BuildModal()
-    await ctx.send('Build your Character', view=view)
-    await ctx.send(f" {discord.Interaction.user} Submitted a character!")
+
+    await ctx.send("Build your Character!", view=view)
 
 
 @bot.command(name='view')
