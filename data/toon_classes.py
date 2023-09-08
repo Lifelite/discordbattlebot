@@ -8,31 +8,11 @@ class Toon:
         self.weapon = weapon
         self.sp_move = sp_move
 
-    def build(self):
-        while True:
-            name = input("What do you want to name your character?\n\n> ")
-            sp_question = input("Would you like to name your special move?\n\n> ")
-            if "y" in sp_question.lower():
-                sp_move = input("Awesome, what do you want to name the move? (Please keep it somewhat family "
-                                "friendly)\n\n> ")
-                print(f"Your {self.t_class} is name {c_name}, with the special move: {sp_move}\n\n")
-                confirm_toon = input('Finalize your Character? (y / n) > ')
-                if "y" in confirm_toon.lower():
-                    self.name = name
-                    self.sp_move = sp_move
-                    print(self.name, self.t_class, self.hp, self.mp, self.weapon, self.sp_move)
-                else:
-                    continue
-
-
-
-
 
 class Druid(Toon):
 
     def __init__(self, name, sp_move="Bear Slam", hp=100, mp=100, weapon="Wolf Claws", t_class="Druid"):
         super().__init__(name, t_class, hp, mp, weapon, sp_move)
-
 
 
 class Ranger(Toon):

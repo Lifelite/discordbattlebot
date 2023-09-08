@@ -1,13 +1,27 @@
 import discord
+from discord import ui
+
 from functions import Functions
 from data.toon_classes import *
 
 
-# class CharacterInputs(ui.Modal, title=f"Build your Character"):
-#
-#     def __init__(self, c_type):
-#         super().__init__()
-#         self.c_type = c_type
+class TextModal(ui.Modal, title="Build your Character"):
+
+    def __init__(self, c_class):
+        super().__init__()
+        self.sp_move = ui.TextInput(
+            label='Name Your Special Move',
+            placeholder='Falcon Punch...'
+        )
+        self.name = ui.TextInput(
+            label='Character Name',
+            placeholder='Name your character....'
+        )
+        self.c_class = c_class
+
+    async def on_submit(self, interaction: discord.Interaction):
+        funct = Functions(self.name, self.sp_move, self.c_class)
+        funct.toon_upload({interaction.user})
 
 
 def assignType(number):
@@ -27,7 +41,7 @@ def assignType(number):
 
 class Dropdown(discord.ui.Select):
 
-    def __init__(self):
+    def __init__(self, ctx):
         options = [
             discord.SelectOption(label='Druid',
                                  description="The class of nature...and furry..-er.. I mean fury", value="Druid"),
@@ -63,25 +77,19 @@ class Dropdown(discord.ui.Select):
         ]
 
         super().__init__(placeholder='Choose your class...', min_values=1, max_values=1, options=options)
+        self.ctx = ctx
 
-    async def callback(self, response: discord.Interaction):
-        thing = assignType(self.values[0])
-        await response.response.send_modal(thing)
+    async def callback(self, response: discord.InteractionResponse):
+        thing = TextModal(self.values[0])
+        await self.ctx.response.send_modal(thing)
         self.disabled = True
-        await response.edit_original_response(
+        await response.edit_message(
             view=self.view
         )
 
 
 class BuildModal(discord.ui.View):
 
-    def __init__(self):
+    def __init__(self, ctx):
         super().__init__()
-        self.add_item(Dropdown())
-    # async def on_submit(self, interaction: discord.Interaction):
-    #     # await interaction.response.reply(f'Welcome your challenger, {self.c_name} has joined the Tournament!')
-    #     t_class = Dropdown.values
-    #     user = discord.Interaction.user
-    #
-    #     f = Functions(self.c_name, self.sp_move, t_class)
-    #     f.toon_upload(user)
+        self.add_item(Dropdown(ctx))

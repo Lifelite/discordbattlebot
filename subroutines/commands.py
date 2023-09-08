@@ -7,9 +7,9 @@ from datetime import datetime
 
 from dotenv import load_dotenv, find_dotenv
 
-from subroutines.ui import BuildModal, Dropdown, assignType
+from subroutines.ui import BuildModal
 
-MY_GUILD = discord.Object(id=360611536672129025)
+# MY_GUILD = discord.Object(id=360611536672129025)
 
 
 class MyClient(discord.Client):
@@ -42,8 +42,7 @@ bot = Bot()
 
 @bot.command()
 async def build(ctx):
-    # await ctx.send(responses.response_dict["class_build"])
-    view = BuildModal()
+    view = BuildModal(ctx)
 
     await ctx.send("Build your Character!", view=view)
 
