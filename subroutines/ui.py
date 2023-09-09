@@ -2,6 +2,7 @@ import discord
 from discord import ui
 from functions import Functions
 from data.toon_classes import *
+from subroutines.mysql_connector import Query
 
 
 class TextModal(discord.ui.Modal, title="Build your Character"):
@@ -82,6 +83,51 @@ class BuildModal(discord.ui.View):
         max_values=1
     )
     async def select_callback(self, interaction: discord.Interaction, select):
-        await interaction.response.send_modal(TextModal(select.values[0]))
-        await interaction.edit_original_response(view=None)
+        username = interaction.user.name
+        username = str(username)
+        username = username.translate({ord(i): None for i in "' {}"})
+        q = Query()
+        u_name = q.find_toon(username)
+        if u_name is None:
+            await interaction.response.send_modal(TextModal(select.values[0]))
+            await interaction.edit_original_response(content="", view=None)
+        else:
+            await interaction.response.edit_message(content="You already have a character!", view=None)
 
+
+class ViewButton(discord.ui.View):
+    @discord.ui.button(label='View Your Toon!', style=discord.ButtonStyle.blurple)
+    async def view(self, interaction: discord.Interaction, button: discord.ui.Button):
+        username = interaction.user.name
+        username = str(username)
+        username = username.translate({ord(i): None for i in "' {}"})
+        q = Query()
+        u_name = q.find_toon(username)
+        if u_name is None:
+            await interaction.response.send_message("Yo!  You need to make a character first, duh!")
+        else:
+            message = f"""
+            Class:          {u_name[5]}
+Name:           {u_name[0]}
+Weapon:         {u_name[1]}
+HP:             {u_name[2]}
+MP:             {u_name[3]}
+Special move:   {u_name[4]}
+            """
+            await interaction.user.send(message)
+            await interaction.response.edit_message(content="Character Viewed!", view=None)
+
+
+class DeleteButton(discord.ui.View):
+    @discord.ui.button(label='DELETE (No going back!)', style=discord.ButtonStyle.blurple)
+    async def view(self, interaction: discord.Interaction, button: discord.ui.Button):
+        username = interaction.user.name
+        username = str(username)
+        username = username.translate({ord(i): None for i in "' {}"})
+        q = Query()
+        u_name = q.find_toon(username)
+        if u_name is None:
+            await interaction.response.send_message("Yo!  You need to make a character first, duh!")
+        else:
+            q.kill_toon(username)
+            await interaction.response.edit_message(content="Character Killed!  You heartless monster!!!", view=None)

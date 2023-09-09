@@ -7,9 +7,8 @@ from datetime import datetime
 
 from dotenv import load_dotenv, find_dotenv
 
-from subroutines.ui import BuildModal
-
-
+from subroutines.ui import BuildModal, ViewButton, DeleteButton
+from mysql_connector import *
 
 
 class MyClient(discord.Client):
@@ -46,9 +45,16 @@ async def build(ctx):
     await ctx.send("Build your Character!", view=view)
 
 
-@bot.command(name='view')
-async def _view(ctx):
-    await ctx.send("TODO:ADDVIEW")
+@bot.command()
+async def view(ctx):
+    view = ViewButton()
+    await ctx.send(view=view)
+
+
+@bot.command()
+async def remove(ctx):
+    view = DeleteButton()
+    await ctx.send(view=view)
 
 
 load_dotenv(find_dotenv())
