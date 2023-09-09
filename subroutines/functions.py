@@ -1,7 +1,9 @@
+import discord
+
 from data.toon_classes import *
 from mysql_connector import *
 
-
+MY_GUILD = discord.Object(id=360611536672129025)
 #
 #
 # class InputHelpers(Bot):

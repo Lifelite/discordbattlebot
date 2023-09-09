@@ -1,27 +1,30 @@
 import discord
 from discord import ui
-
 from functions import Functions
 from data.toon_classes import *
+from subroutines.mysql_connector import Query
 
 
-class TextModal(ui.Modal, title="Build your Character"):
+class TextModal(discord.ui.Modal, title="Build your Character"):
 
-    def __init__(self, c_class):
+    def __init__(self, c_name):
         super().__init__()
-        self.sp_move = ui.TextInput(
-            label='Name Your Special Move',
-            placeholder='Falcon Punch...'
-        )
-        self.name = ui.TextInput(
-            label='Character Name',
-            placeholder='Name your character....'
-        )
-        self.c_class = c_class
+        self.c_name = c_name
+
+    name = ui.TextInput(
+        label='Character Name',
+        placeholder='Name your character....'
+    )
+
+    sp_move = ui.TextInput(
+        label='Name Your Special Move',
+        placeholder='Falcon Punch...'
+    )
 
     async def on_submit(self, interaction: discord.Interaction):
-        funct = Functions(self.name, self.sp_move, self.c_class)
-        funct.toon_upload({interaction.user})
+        funct = Functions(self.name, self.sp_move, self.c_name)
+        funct.toon_upload({interaction.user.name})
+        await interaction.response.send_message(f"Thanks for your submission, {interaction.user.name}")
 
 
 def assignType(number):
@@ -39,10 +42,9 @@ def assignType(number):
     return classes[number]()
 
 
-class Dropdown(discord.ui.Select):
-
-    def __init__(self, ctx):
-        options = [
+class BuildModal(discord.ui.View):
+    @discord.ui.select(
+        options=[
             discord.SelectOption(label='Druid',
                                  description="The class of nature...and furry..-er.. I mean fury", value="Druid"),
 
@@ -64,7 +66,8 @@ class Dropdown(discord.ui.Select):
                                  description="Let me guess, you're chaotic neutral.", value="Rogue"),
 
             discord.SelectOption(label='Shaman',
-                                 description="Either overpowered or nerfed to hell...no inbetween.", value="Shaman"),
+                                 description="Either overpowered or nerfed to hell...no inbetween.",
+                                 value="Shaman"),
 
             discord.SelectOption(label='Warlock',
                                  description="See Mages are dumb, just do a deal with the devil and get a similar result, duh.",
@@ -74,22 +77,57 @@ class Dropdown(discord.ui.Select):
                                  description="Enjoys the simple things in life.  Involves crushing skulls.",
                                  value="Warrior")
 
-        ]
+        ],
+        placeholder='Choose your class...',
+        min_values=1,
+        max_values=1
+    )
+    async def select_callback(self, interaction: discord.Interaction, select):
+        username = interaction.user.name
+        username = str(username)
+        username = username.translate({ord(i): None for i in "' {}"})
+        q = Query()
+        u_name = q.find_toon(username)
+        if u_name is None:
+            await interaction.response.send_modal(TextModal(select.values[0]))
+            await interaction.edit_original_response(content="", view=None)
+        else:
+            await interaction.response.edit_message(content="You already have a character!", view=None)
 
-        super().__init__(placeholder='Choose your class...', min_values=1, max_values=1, options=options)
-        self.ctx = ctx
 
-    async def callback(self, response: discord.InteractionResponse):
-        thing = TextModal(self.values[0])
-        await self.ctx.response.send_modal(thing)
-        self.disabled = True
-        await response.edit_message(
-            view=self.view
-        )
+class ViewButton(discord.ui.View):
+    @discord.ui.button(label='View Your Toon!', style=discord.ButtonStyle.blurple)
+    async def view(self, interaction: discord.Interaction, button: discord.ui.Button):
+        username = interaction.user.name
+        username = str(username)
+        username = username.translate({ord(i): None for i in "' {}"})
+        q = Query()
+        u_name = q.find_toon(username)
+        if u_name is None:
+            await interaction.response.send_message("Yo!  You need to make a character first, duh!")
+        else:
+            message = f"""
+            Class:          {u_name[5]}
+Name:           {u_name[0]}
+Weapon:         {u_name[1]}
+HP:             {u_name[2]}
+MP:             {u_name[3]}
+Special move:   {u_name[4]}
+            """
+            await interaction.user.send(message)
+            await interaction.response.edit_message(content="Character Viewed!", view=None)
 
 
-class BuildModal(discord.ui.View):
-
-    def __init__(self, ctx):
-        super().__init__()
-        self.add_item(Dropdown(ctx))
+class DeleteButton(discord.ui.View):
+    @discord.ui.button(label='DELETE (No going back!)', style=discord.ButtonStyle.blurple)
+    async def view(self, interaction: discord.Interaction, button: discord.ui.Button):
+        username = interaction.user.name
+        username = str(username)
+        username = username.translate({ord(i): None for i in "' {}"})
+        q = Query()
+        u_name = q.find_toon(username)
+        if u_name is None:
+            await interaction.response.send_message("Yo!  You need to make a character first, duh!")
+        else:
+            q.kill_toon(username)
+            await interaction.response.edit_message(content="Character Killed!  You heartless monster!!!", view=None)
