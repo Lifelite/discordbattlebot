@@ -83,8 +83,5 @@ class BuildModal(discord.ui.View):
     )
     async def select_callback(self, interaction: discord.Interaction, select):
         await interaction.response.send_modal(TextModal(select.values[0]))
-        # await interaction.response.send_modal(TextModal(select.values[0]))
-        # select.disabled = True
-        # await interaction.response.edit_message(
-        #     view=select.view
-        # )
+        await interaction.edit_original_response(view=None)
+
