@@ -47,3 +47,15 @@ class_list = [
     "Warlock",
     "Warrior",
 ]
+
+initiative = [
+    "Rogue",
+    "Ranger",
+    "Warlock",
+    "Druid",
+    "Priest",
+    "Mage",
+    "Shaman",
+    "Warrior",
+    "Paladin",
+]

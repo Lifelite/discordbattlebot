@@ -56,3 +56,8 @@ class Functions:
 
         q = Query()
         q.commit_toon(aToon.name, aToon.weapon, aToon.hp, aToon.mp, aToon.sp_move, aToon.t_class, t_user)
+
+    def get_toon_list(self):
+        q = Query()
+        q.get_toons()
+

@@ -27,7 +27,6 @@ class Query(Database):
         self.db = Database.my_sql_connect()
         self.c = self.db.cursor()
 
-
     def commit_toon(self, t_name, weapon, hp, mp, sp_move, t_type, t_user):
         print(str(t_user))
         t_name = str(t_name)
@@ -50,6 +49,14 @@ class Query(Database):
 
     def kill_toon(self, user):
         self.c.execute("DELETE FROM toons WHERE t_user = \"" + user + "\";")
+
+    def get_toons(self):
+        self.c.execute("SELECT t_name, weapons, hp, mp, sp_move, t_type FROM toons")
+        toon_list = self.c.fetchall()
+        return toon_list
+
+    def delete_everything(self):
+        self.c.execute("DELETE FROM toons;")
 
     def manual_query(self, sql):
         self.c.execute(sql)
