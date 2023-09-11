@@ -1,4 +1,5 @@
 import os
+import time
 
 import discord
 from discord import ui
@@ -7,7 +8,8 @@ from datetime import datetime
 
 from dotenv import load_dotenv, find_dotenv
 
-from subroutines.ui import BuildModal, ViewButton, DeleteButton
+from subroutines.fight import Fight
+from subroutines.ui import BuildModal, ViewButton, DeleteButton, DeleteALLButton
 from mysql_connector import *
 
 
@@ -55,6 +57,18 @@ async def view(ctx):
 async def remove(ctx):
     view = DeleteButton()
     await ctx.send(view=view)
+
+@bot.command()
+async def blank(ctx):
+    view = DeleteALLButton()
+    await ctx.send(view=view)
+
+@bot.command()
+async def fight(ctx):
+    f = Fight()
+    for message in f.dialogue:
+        await ctx.send(message)
+        time.sleep(3)
 
 
 load_dotenv(find_dotenv())

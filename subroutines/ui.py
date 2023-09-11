@@ -120,7 +120,7 @@ Special move:   {u_name[4]}
 
 class DeleteButton(discord.ui.View):
     @discord.ui.button(label='DELETE (No going back!)', style=discord.ButtonStyle.blurple)
-    async def view(self, interaction: discord.Interaction, button: discord.ui.Button):
+    async def view(self, interaction: discord.Interaction):
         username = interaction.user.name
         username = str(username)
         username = username.translate({ord(i): None for i in "' {}"})
@@ -131,3 +131,11 @@ class DeleteButton(discord.ui.View):
         else:
             q.kill_toon(username)
             await interaction.response.edit_message(content="Character Killed!  You heartless monster!!!", view=None)
+
+
+class DeleteALLButton(discord.ui.View):
+    @discord.ui.button(label='DELETE (No going back!)', style=discord.ButtonStyle.blurple)
+    async def view(self, interaction: discord.Interaction):
+        q = Query()
+        q.delete_everything()
+        await interaction.response.edit_message(content="All characters nuked!  Savage AF!", view=None)
