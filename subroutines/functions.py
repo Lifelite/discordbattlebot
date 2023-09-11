@@ -60,3 +60,4 @@ class Functions:
     def get_toon_list(self):
         q = Query()
         q.get_toons()
+

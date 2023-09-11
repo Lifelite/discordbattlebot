@@ -66,6 +66,7 @@ async def blank(ctx):
 @bot.command()
 async def fight(ctx):
     f = Fight()
+    f.fight_round_bracket()
     for message in f.dialogue:
         await ctx.send(message)
         time.sleep(3)

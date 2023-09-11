@@ -1,5 +1,6 @@
 import discord
-from discord import ui
+from discord.ext import tasks
+from discord import ui, Intents
 from functions import Functions
 from data.toon_classes import *
 from subroutines.mysql_connector import Query
@@ -107,11 +108,11 @@ class ViewButton(discord.ui.View):
             await interaction.response.send_message("Yo!  You need to make a character first, duh!")
         else:
             message = f"""
-            Class:          {u_name[5]}
-Name:           {u_name[0]}
-Weapon:         {u_name[1]}
-HP:             {u_name[2]}
-MP:             {u_name[3]}
+            Class:                   {u_name[5]}
+Name:                  {u_name[0]}
+Weapon:              {u_name[1]}
+HP:                       {u_name[2]}
+MP:                      {u_name[3]}
 Special move:   {u_name[4]}
             """
             await interaction.user.send(message)
@@ -120,7 +121,7 @@ Special move:   {u_name[4]}
 
 class DeleteButton(discord.ui.View):
     @discord.ui.button(label='DELETE (No going back!)', style=discord.ButtonStyle.blurple)
-    async def view(self, interaction: discord.Interaction):
+    async def view(self, interaction: discord.Interaction, button: discord.ui.Button):
         username = interaction.user.name
         username = str(username)
         username = username.translate({ord(i): None for i in "' {}"})
@@ -135,7 +136,20 @@ class DeleteButton(discord.ui.View):
 
 class DeleteALLButton(discord.ui.View):
     @discord.ui.button(label='DELETE (No going back!)', style=discord.ButtonStyle.blurple)
-    async def view(self, interaction: discord.Interaction):
-        q = Query()
-        q.delete_everything()
-        await interaction.response.edit_message(content="All characters nuked!  Savage AF!", view=None)
+    async def view(self, interaction: discord.Interaction, button: discord.ui.Button):
+        if "173299413882634240" in interaction.user:
+            q = Query()
+            q.delete_everything()
+            await interaction.response.edit_message(content="All characters nuked!  Savage AF!", view=None)
+        else:
+            interaction.response.send_message(content="Nuh uh uh!  You can't do that")
+
+# class LoopTask(discord.Client):
+#     def __init__(self, intents: Intents):
+#         super().__init__(intents=intents)
+#         self.counter = 0
+#
+#     @discord.ext.tasks.loop(seconds=5)
+#     async def t_announcer(self, channel, dialogue):
+#         channel.send(dialogue[self.counter])
+#         self.counter += 1
