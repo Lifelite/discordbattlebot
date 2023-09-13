@@ -15,7 +15,7 @@ class Database:
                                      autocommit=True,
                                      ssl_mode="VERIFY_IDENTITY",
                                      ssl={
-                                         "ca": "C:/ca/cacert.pem"
+                                         "ca": os.getenv("CACERT")
                                      })
         db = connection
         return db

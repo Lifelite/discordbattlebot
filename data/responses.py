@@ -1,51 +1,52 @@
-response_dict = {
-    "help": f"""
-Welcome to the Character Builder, let me give you a description of how all this works:
-
-This is a bot to build characters to FIGHT.  Each user is allowed one character, you can: 
-
-%build: This triggers the character builder routine.
-
-%view: View the character you've built.  
-
-%tournament: This triggers the tournament functionality.
-
-%reroll: This allows you to re-roll your character
-
-%help: You already found this one obviously.
-
-%delete: This deletes your character you.  No going back after this!
-
-%pirate: Makes me talk like a pirate to you.
-
-%cringe: Just don't, you'll regret it.
-            
-            """,
-    "class_build": """
-    Choose your class:
-1.     Druid
-2.     Hunter
-3.     Mage
-4.     Paladin
-5.     Priest
-6.     Rogue
-7.     Shaman
-8.     Warlock
-9.     Warrior
-    """,
-
-}
-
 class_list = [
-    "Druid",
-    "Hunter",
-    "Mage",
-    "Paladin",
-    "Priest",
-    "Rogue",
-    "Shaman",
-    "Warlock",
-    "Warrior",
+    """
+    Here is the list of classes.  HP is obviously Health, MP is their Attack Power, Weapons...you get it.
+    
+    Druid:
+    HP = 100
+    MP = 100
+    Weapon = Wolf Claws
+    
+    Ranger:
+    HP = 90
+    MP = 110
+    Weapon = Bow
+    
+    Mage:
+    HP = 10
+    MP = 190
+    Weapon = Magic Staff
+    
+    Paladin:
+    HP = 160
+    MP = 40
+    Weapon = Sword and Shield
+    
+    Priest:
+    HP = 20
+    MP = 180
+    Weapon = Holy Scepter
+    
+    Rogue:
+    HP = 80
+    MP = 120
+    Weapon = Daggers
+    
+    Shaman:
+    HP = 110
+    MP = 90
+    Weapon = Totem
+    
+    Warlock:
+    HP = 30
+    MP = 170
+    Weapon = Cursed Sword
+    
+    Warrior:
+    HP = 130
+    MP = 70
+    Weapon = Warhammer
+    """
 ]
 
 initiative = [

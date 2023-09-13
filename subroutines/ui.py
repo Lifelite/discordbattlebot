@@ -1,8 +1,6 @@
 import discord
-from discord.ext import tasks
-from discord import ui, Intents
+from discord import ui
 from functions import Functions
-from data.toon_classes import *
 from subroutines.mysql_connector import Query
 
 
@@ -26,21 +24,6 @@ class TextModal(discord.ui.Modal, title="Build your Character"):
         funct = Functions(self.name, self.sp_move, self.c_name)
         funct.toon_upload({interaction.user.name})
         await interaction.response.send_message(f"Thanks for your submission, {interaction.user.name}")
-
-
-def assignType(number):
-    classes = {
-        "Druid": Druid,
-        "Ranger": Ranger,
-        "Mage": Mage,
-        "Paladin": Paladin,
-        "Priest": Priest,
-        "Rogue": Rogue,
-        "Shaman": Shaman,
-        "Warlock": Warlock,
-        "Warrior": Warrior,
-    }
-    return classes[number]()
 
 
 class BuildModal(discord.ui.View):

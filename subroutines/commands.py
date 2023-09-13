@@ -3,6 +3,7 @@ import time
 
 import discord
 from discord import ui
+from data.responses import class_list
 from discord.ext import commands
 from datetime import datetime
 
@@ -67,6 +68,11 @@ async def fight(ctx):
     for message in f.dialogue:
         await ctx.send(message)
         time.sleep(3)
+
+
+@bot.command()
+async def classlist(ctx):
+    await ctx.send(classlist)
 
 
 load_dotenv(find_dotenv())
