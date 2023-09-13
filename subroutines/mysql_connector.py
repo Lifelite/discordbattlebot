@@ -28,7 +28,6 @@ class Query(Database):
         self.c = self.db.cursor()
 
     def commit_toon(self, t_name, weapon, hp, mp, sp_move, t_type, t_user):
-        print(str(t_user))
         t_name = str(t_name)
         weapon = str(weapon)
         hp = str(hp)

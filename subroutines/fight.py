@@ -41,9 +41,9 @@ class Fight:
     def combat_hit(self, d1):
         if d1 == 1:
             return False
-        elif d1 in range(2, 11):
+        elif d1 in range(2, 10):
             return 3
-        elif d1 in range(11, 19):
+        elif d1 in range(10, 20):
             return 1
         elif d1 == 20:
             return 2
@@ -60,7 +60,7 @@ class Fight:
         self.dialogue.append(f"IT'S TIME FOR BATTLE")
         self.dialogue.append(f"First we have {name1} the {f1[4]}")
         self.dialogue.append(f"They will fight {name2} the {f2[4]}")
-        self.dialogue.append(f"************BEGIN************")
+        self.dialogue.append(f"* * * * * * * * * * * * BEGIN * * * * * * * * * * * *")
 
         hp1 = int(f1[1])
         hp2 = int(f2[1])
@@ -133,7 +133,7 @@ class Fight:
                 return name2
             if mp1 > hp2 and willhit == 2:
                 self.dialogue.append(f"....AND IT HITS, KILLING {name2}!  {name1}, won!!!")
-                return name2
+                return name1
             else:
                 self.dialogue.append(
                     f"It hits {name2}, but doesn't finish them!  They finish off {name1} and claim victory!")
@@ -144,28 +144,20 @@ class Fight:
         self.bracket = self.fighter_list(self.fighters_and_stats)
         if not self.bracket:
             return False
-        # if len(self.bracket) % 2 != 0:
-        #     self.bracket[0][1] += 1
         f_round = 1
 
         while True:
             self.dialogue.append(f"Round {f_round} in this tournament is starting!")
             matches = []
             for toon in self.bracket:
-                # if toon[1] == f_round:
-                #     continue
-                # else:
                 matches.append(toon)  # Makes a temporary list with fighters for this round
-            # if len(matches) <= 1:
-            #     break
+
             # Picks the first two fighters, then gets their stats from the dictionary
             while True:
                 if len(matches) == 0:
                     break
                 name1 = matches[0][0]
                 name2 = matches[1][0]
-                player1_rounds = matches[0][1]
-                player2_rounds = matches[1][1]
                 fighter1 = self.fighters_and_stats[name1]
                 fighter2 = self.fighters_and_stats[name2]
                 if initiative.index(fighter1[4]) <= initiative.index(fighter2[4]):

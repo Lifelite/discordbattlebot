@@ -144,12 +144,3 @@ class DeleteALLButton(discord.ui.View):
         else:
             interaction.response.send_message(content="Nuh uh uh!  You can't do that")
 
-# class LoopTask(discord.Client):
-#     def __init__(self, intents: Intents):
-#         super().__init__(intents=intents)
-#         self.counter = 0
-#
-#     @discord.ext.tasks.loop(seconds=5)
-#     async def t_announcer(self, channel, dialogue):
-#         channel.send(dialogue[self.counter])
-#         self.counter += 1
